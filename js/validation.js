@@ -4,19 +4,22 @@ function validate(element) {
     var errorElement = element.nextElementSibling
     var allErrors = ""
 
-    if (isIn(classes, 'form-required')) {
-        if (element.value < 1) {
-            var errorString = "Pole " + element.getAttribute("name") + " jest wymagane"
-            addErrorMessage(errorString, errorElement)
-            allErrors += errorString
-        }
+    clearErrorMessage(errorElement)
+    element.style.border = "2px solid forestgreen"
+
+    if (isIn(classes, 'form-required') && element.value < 1) {
+        var errorString = "Pole " + element.getAttribute("name") + " jest wymagane "
+        addErrorMessage(errorString, errorElement)
+        allErrors += errorString
+    }
+    if (isIn(classes, 'form-email') && !validateEmail(element.value)) {
+        var errorString = "Niepoprawny adres email "
+        addErrorMessage(errorString, errorElement)
+        allErrors += errorString
     }
 
-    // if passed all checks
-    if (allErrors == "") {
-        clearErrorMessage(errorElement)
-        element.style.border = "2px solid forestgreen"
-    } else {
+    // add invalid field styling
+    if (allErrors != "") {
         element.style.border = "2px solid crimson"
     }
 
@@ -50,11 +53,19 @@ function validateForm(element) {
     }
 }
 
+function validateEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
+
 function addErrorMessage(msg, errorElement) {
     if (!isIn(errorElement.classList, 'error-message')) {
         console.log('error element does not contain error-message class!')
     }
-    errorElement.innerHTML = msg
+    if (errorElement.innerHTML != "") {
+        errorElement.innerHTML += "<br>"
+    }
+    errorElement.innerHTML += msg
 }
 
 function clearErrorMessage(errorElement) {
