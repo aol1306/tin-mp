@@ -25,11 +25,11 @@
                 <span class='error-message' style="grid-row: 2; grid-column: 3;"></span>
 
                 <label for=password style="grid-row: 3; grid-column: 1;line-height: 1.8em;">Hasło</label>
-                <input class="validate form-required text-input" name=password style="grid-row: 3; grid-column: 2;" type=password oninput="validate(this)">
+                <input id=password-input-1 class="validate form-required form-password form-password-match text-input" name=password style="grid-row: 3; grid-column: 2;" type=password oninput="validate(this);validate(document.getElementById('password-input-2'))">
                 <span class='error-message' style="grid-row: 3; grid-column: 3;"></span>
 
                 <label for=confirm-password style="grid-row: 4; grid-column: 1;line-height: 1.8em;">Potwierdź hasło</label>
-                <input class="validate form-required text-input" name=confirm-password style="grid-row: 4; grid-column: 2;" type=password oninput="validate(this)">
+                <input id=password-input-2 class="validate form-required form-password form-password-match text-input" name=confirm-password style="grid-row: 4; grid-column: 2;" type=password oninput="validate(this);validate(document.getElementById('password-input-1'))">
                 <span class='error-message' style="grid-row: 4; grid-column: 3;"></span>
 
                 <input class=submit-button type="submit" style="grid-row:5; grid-column: 2;" value=Rejestruj>

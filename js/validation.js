@@ -17,6 +17,16 @@ function validate(element) {
         addErrorMessage(errorString, errorElement)
         allErrors += errorString
     }
+    if (isIn(classes, 'form-password') && !validatePassword(element.value)) {
+        var errorString = "Za krótkie hasło (min. 8 znaków) "
+        addErrorMessage(errorString, errorElement)
+        allErrors += errorString
+    }
+    if (isIn(classes, 'form-password-match') && !validatePasswordMatch()) {
+        var errorString = "Hasła nie są identyczne "
+        addErrorMessage(errorString, errorElement)
+        allErrors += errorString
+    }
 
     // add invalid field styling
     if (allErrors != "") {
@@ -51,6 +61,16 @@ function validateForm(element) {
         }
         return false
     }
+}
+
+function validatePasswordMatch() {
+    var field1 = document.getElementById('password-input-1')
+    var field2 = document.getElementById('password-input-2')
+    return field1.value == field2.value
+}
+
+function validatePassword(password) {
+    return password.length > 8
 }
 
 function validateEmail(email) {
