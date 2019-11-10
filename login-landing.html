@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Przeglądaj karty</title>
+</head>
+
+<body>
+    <header>
+        <div class=title>Przeglądaj karty</div>
+        <div class=menu-item><a href=index.html class="menu-button">Wyloguj</a></div>
+    </header>
+    <div class=content style="display: grid;">
+        <a style="grid-row: 1; margin: 1px auto 1px 1px;" href=add.html class=red-button>+</a>
+        <table style="grid-row: 2;">
+            <tr><th>Front</th><th>Back</th><th></th></tr><!-- <i class="fas fa-search-plus"></i> <i class="fas fa-edit"></i>  <i class="icon-link fas fa-trash" onclick="rly()"></i>-->
+            <tr><td>人</td><td>człowiek</td><td><a class=icon-link href=details.html><img class=fas src="img/details.png"></a><a class=icon-link href=edit.html><img class=fas src="img/edit.png"></a><img class=fas src="img/trash.png" onclick="rly()"></td></tr>
+            <tr><td>目</td><td>oko</td><td><a class=icon-link href=details.html><img class=fas src="img/details.png"></a><a class=icon-link href=edit.html><img class=fas src="img/edit.png"></a><img class=fas src="img/trash.png" onclick="rly()"></td></tr>
+            <tr><td>天気</td><td>pogoda</td><td><a class=icon-link href=details.html><img class=fas src="img/details.png"></a><a class=icon-link href=edit.html><img class=fas src="img/edit.png"></a><img class=fas src="img/trash.png" onclick="rly()"></td></tr>
+            <tr><td>年</td><td>rok</td><td><a class=icon-link href=details.html><img class=fas src="img/details.png"></a><a class=icon-link href=edit.html><img class=fas src="img/edit.png"></a><img class=fas src="img/trash.png" onclick="rly()"></td></tr>
+            <tr><td>手</td><td>ręka</td><td><a class=icon-link href=details.html><img class=fas src="img/details.png"></a><a class=icon-link href=edit.html><img class=fas src="img/edit.png"></a><img class=fas src="img/trash.png" onclick="rly()"></td></tr>
+            <tr><td>電車</td><td>pociąg</td><td><a class=icon-link href=details.html><img class=fas src="img/details.png"></a><a class=icon-link href=edit.html><img class=fas src="img/edit.png"></a><img class=fas src="img/trash.png" onclick="rly()"></td></tr>
+            <tr><td>森</td><td>las</td><td><a class=icon-link href=details.html><img class=fas src="img/details.png"></a><a class=icon-link href=edit.html><img class=fas src="img/edit.png"></a><img class=fas src="img/trash.png" onclick="rly()"></td></tr>
+            <tr><td>電池</td><td>bateria</td><td><a class=icon-link href=details.html><img class=fas src="img/details.png"></a><a class=icon-link href=edit.html><img class=fas src="img/edit.png"></a><img class=fas src="img/trash.png" onclick="rly()"></td></tr>
+        </table>
+        <div style="grid-row: 3;" class="list-nav-container">
+            <div class="list-nav-element previous-button"><a class="disabled-button red-button">previous</a></div>
+            <div class="page-counter">1/2</div>
+            <div class="list-nav-element next-button"><a class="red-button" href=login-landing-2.html>next</a></div>
+        </div>
+    </div>
+    <footer>
+        <div>Zasady użytkowania</div>
+    </footer>
+</body>
+
+<script>
+function rly() {
+    alert("Really remove?")
+}
+</script>
+
+</html>
