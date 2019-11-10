@@ -138,7 +138,7 @@ th, td {
     display: grid;
     border: 1px solid black;
     padding: 2em;
-    grid-template-columns: 1fr 2fr; 
+    grid-template-columns: 1fr 2fr 1fr; 
     margin-right: 5em;
     margin-left: 5em;
 }
