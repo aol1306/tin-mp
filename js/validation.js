@@ -15,6 +15,9 @@ function validate(element) {
     // if passed all checks
     if (allErrors == "") {
         clearErrorMessage(errorElement)
+        element.style.border = "2px solid forestgreen"
+    } else {
+        element.style.border = "2px solid crimson"
     }
 
     return allErrors
@@ -36,7 +39,6 @@ function validateForm(element) {
         }
     }
 
-    console.log(allErrors)
     if (allErrors.length == 0) {
         return true
     } else {
