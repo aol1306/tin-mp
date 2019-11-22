@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"tinmp/model"
 )
 
 func logging(f http.HandlerFunc) http.HandlerFunc {
@@ -62,6 +63,8 @@ func add(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	log.Println("Start")
+
+	model.Init()
 
 	http.HandleFunc("/", logging(index))
 	http.HandleFunc("/login", logging(login))
