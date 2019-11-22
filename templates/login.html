@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="static/css/style.css">
+    <script src=static/js/validation.js></script>
+    <title>Logowanie</title>
+</head>
+
+<body>
+    <header>
+        <div class=title>Logowanie</div>
+        <div class=menu-item><a href=register class="menu-button">Rejestracja</a></div>
+        <div class=menu-item><a href=login class="menu-button">Logowanie</a></div>
+    </header>
+    <div class=content>
+        <div class="content-item grid-row-1"><h2>Zacznij już dzisiaj</h2></div>
+        <div class="content-item grid-row-2">
+                <form class=grid-container action=login method=post onsubmit="return validateForm(this)">
+                <label for=username style="grid-row: 1; grid-column: 1;line-height: 1.8em;">Login</label>
+                <input class="validate form-required text-input" name=username style="grid-row: 1; grid-column: 2;" type=text oninput=validate(this)>
+                <span class='error-message' style='grid-row: 1; grid-column: 3;'></span>
+
+                <label for=password style="grid-row: 2; grid-column: 1;line-height: 1.8em;">Hasło</label>
+                <input class="validate form-required text-input" name=password style="grid-row: 2; grid-column: 2;" type=password oninput=validate(this)>
+                <span class='error-message' style='grid-row: 2; grid-column: 3;'></span>
+
+                <input class=submit-button type="submit" style="grid-row:3; grid-column: 2;" value=Login>
+                <span id='error-box' style="grid-row:4; grid-column: 2;"></span>
+
+                </form>
+        </div>
+    </div>
+    <footer>
+        <div>Zasady użytkowania</div>
+    </footer>
+</body>
+</html>

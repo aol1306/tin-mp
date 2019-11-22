@@ -180,3 +180,11 @@ th, td {
     color: black;
     cursor: pointer;
 }
+
+#error-box {
+    font-size: 0.5em;
+}
+
+.error-message { 
+    font-size: 0.5em;
+}
