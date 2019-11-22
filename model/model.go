@@ -18,6 +18,7 @@ func Init() {
 		log.Println("Cannot ping database")
 		log.Fatal(err)
 	}
+    log.Println("db ok")
 
 	// create tables
 	_, err = db.Exec("create table if not exists test(id integer not null primary key);")
