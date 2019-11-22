@@ -14,6 +14,8 @@ import (
 }*/
 
 func main() {
+    log.Println("Start")
+
 	// index page
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		tmpl := template.Must(template.ParseFiles("templates/index.html"))
@@ -37,9 +39,25 @@ func main() {
 		tmpl.Execute(w, nil)
 	})
 
-    // landing page (after login)
+    // ***
+    // ONLY FOR AUTHORIZED USERS
+    // ***
+
+    // landing page
     http.HandleFunc("/landing", func(w http.ResponseWriter, r *http.Request) {
 		tmpl := template.Must(template.ParseFiles("templates/landing.html"))
+		tmpl.Execute(w, nil)
+	})
+
+    // edit page
+    http.HandleFunc("/edit", func(w http.ResponseWriter, r *http.Request) {
+		tmpl := template.Must(template.ParseFiles("templates/edit.html"))
+		tmpl.Execute(w, nil)
+	})
+
+    // details page
+    http.HandleFunc("/details", func(w http.ResponseWriter, r *http.Request) {
+		tmpl := template.Must(template.ParseFiles("templates/details.html"))
 		tmpl.Execute(w, nil)
 	})
 
