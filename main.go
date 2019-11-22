@@ -39,6 +39,13 @@ func main() {
 		tmpl.Execute(w, nil)
 	})
 
+    // view cards page
+	http.HandleFunc("/view-cards", func(w http.ResponseWriter, r *http.Request) {
+		tmpl := template.Must(template.ParseFiles("templates/view-cards.html"))
+		tmpl.Execute(w, nil)
+	})
+
+
     // ***
     // ONLY FOR AUTHORIZED USERS
     // ***
@@ -58,6 +65,12 @@ func main() {
     // details page
     http.HandleFunc("/details", func(w http.ResponseWriter, r *http.Request) {
 		tmpl := template.Must(template.ParseFiles("templates/details.html"))
+		tmpl.Execute(w, nil)
+	})
+
+    // add page
+    http.HandleFunc("/add", func(w http.ResponseWriter, r *http.Request) {
+		tmpl := template.Must(template.ParseFiles("templates/add.html"))
 		tmpl.Execute(w, nil)
 	})
 
