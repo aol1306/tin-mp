@@ -6,16 +6,24 @@ import _ "github.com/mattn/go-sqlite3"
 
 func Init() {
 	log.Println("Init model")
-    db, err := sql.Open("sqlite3", "./temp.db")
-    if err != nil {
-        log.Fatal(err)
-    }
-    log.Println("db OK")
 
-    _, err = db.Exec("create table test(id integer not null primary key);")
-    if err != nil {
-        log.Fatal(err)
-    }
+	// connect to db
+	db, err := sql.Open("sqlite3", "./database.db")
+	defer db.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = db.Ping()
+	if err != nil {
+		log.Println("Cannot ping database")
+		log.Fatal(err)
+	}
 
-    defer db.Close()
+	// create tables
+	_, err = db.Exec("create table if not exists test(id integer not null primary key);")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// put some data
 }
