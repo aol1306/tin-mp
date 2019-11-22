@@ -20,14 +20,20 @@ func logging(f http.HandlerFunc) http.HandlerFunc {
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
-	s, _ := tmplBox.FindString("templates/index.html")
-	tmpl, _ := template.New("index").Parse(s)
+	s, err := tmplBox.FindString("index.html")
+    if err != nil {
+        log.Println(err)
+    }
+	tmpl, err := template.New("index").Parse(s)
+    if err != nil {
+        log.Println(err)
+    }
 	tmpl.Execute(w, nil)
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		s, _ := tmplBox.FindString("templates/login.html")
+		s, _ := tmplBox.FindString("login.html")
 		tmpl, _ := template.New("login").Parse(s)
 		tmpl.Execute(w, nil)
 	} else {
@@ -37,13 +43,13 @@ func login(w http.ResponseWriter, r *http.Request) {
 }
 
 func register(w http.ResponseWriter, r *http.Request) {
-	s, _ := tmplBox.FindString("templates/register.html")
+	s, _ := tmplBox.FindString("register.html")
 	tmpl, _ := template.New("register").Parse(s)
 	tmpl.Execute(w, nil)
 }
 
 func viewcards(w http.ResponseWriter, r *http.Request) {
-	s, _ := tmplBox.FindString("templates/view-cards.html")
+	s, _ := tmplBox.FindString("view-cards.html")
 	tmpl, _ := template.New("view-cards").Parse(s)
 	tmpl.Execute(w, nil)
 }
@@ -51,25 +57,25 @@ func viewcards(w http.ResponseWriter, r *http.Request) {
 // TODO: add auth
 
 func landing(w http.ResponseWriter, r *http.Request) {
-	s, _ := tmplBox.FindString("templates/landing.html")
+	s, _ := tmplBox.FindString("landing.html")
 	tmpl, _ := template.New("landing").Parse(s)
 	tmpl.Execute(w, nil)
 }
 
 func edit(w http.ResponseWriter, r *http.Request) {
-	s, _ := tmplBox.FindString("templates/edit.html")
+	s, _ := tmplBox.FindString("edit.html")
 	tmpl, _ := template.New("edit").Parse(s)
 	tmpl.Execute(w, nil)
 }
 
 func details(w http.ResponseWriter, r *http.Request) {
-	s, _ := tmplBox.FindString("templates/details.html")
+	s, _ := tmplBox.FindString("details.html")
 	tmpl, _ := template.New("details").Parse(s)
 	tmpl.Execute(w, nil)
 }
 
 func add(w http.ResponseWriter, r *http.Request) {
-	s, _ := tmplBox.FindString("templates/add.html")
+	s, _ := tmplBox.FindString("add.html")
 	tmpl, _ := template.New("add").Parse(s)
 	tmpl.Execute(w, nil)
 }
