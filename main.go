@@ -5,7 +5,12 @@ import (
 	"log"
 	"net/http"
 	"tinmp/model"
+
+	"github.com/gobuffalo/packr/v2"
 )
+
+var tmplBox = packr.New("tmpl", "./templates")
+var staticBox = packr.New("static", "./static")
 
 func logging(f http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -15,13 +20,15 @@ func logging(f http.HandlerFunc) http.HandlerFunc {
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles("templates/index.html"))
+	s, _ := tmplBox.FindString("templates/index.html")
+	tmpl, _ := template.New("index").Parse(s)
 	tmpl.Execute(w, nil)
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		tmpl := template.Must(template.ParseFiles("templates/login.html"))
+		s, _ := tmplBox.FindString("templates/login.html")
+		tmpl, _ := template.New("login").Parse(s)
 		tmpl.Execute(w, nil)
 	} else {
 		// TODO: verify login credentials
@@ -30,34 +37,40 @@ func login(w http.ResponseWriter, r *http.Request) {
 }
 
 func register(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles("templates/register.html"))
+	s, _ := tmplBox.FindString("templates/register.html")
+	tmpl, _ := template.New("register").Parse(s)
 	tmpl.Execute(w, nil)
 }
 
 func viewcards(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles("templates/view-cards.html"))
+	s, _ := tmplBox.FindString("templates/view-cards.html")
+	tmpl, _ := template.New("view-cards").Parse(s)
 	tmpl.Execute(w, nil)
 }
 
 // TODO: add auth
 
 func landing(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles("templates/landing.html"))
+	s, _ := tmplBox.FindString("templates/landing.html")
+	tmpl, _ := template.New("landing").Parse(s)
 	tmpl.Execute(w, nil)
 }
 
 func edit(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles("templates/edit.html"))
+	s, _ := tmplBox.FindString("templates/edit.html")
+	tmpl, _ := template.New("edit").Parse(s)
 	tmpl.Execute(w, nil)
 }
 
 func details(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles("templates/details.html"))
+	s, _ := tmplBox.FindString("templates/details.html")
+	tmpl, _ := template.New("details").Parse(s)
 	tmpl.Execute(w, nil)
 }
 
 func add(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles("templates/add.html"))
+	s, _ := tmplBox.FindString("templates/add.html")
+	tmpl, _ := template.New("add").Parse(s)
 	tmpl.Execute(w, nil)
 }
 
@@ -76,7 +89,7 @@ func main() {
 	http.HandleFunc("/add", logging(add))
 
 	// static files
-	fs := http.FileServer(http.Dir("static/"))
+	fs := http.FileServer(staticBox)
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
 	log.Println("Listening on :8080")
