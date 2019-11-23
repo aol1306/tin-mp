@@ -31,7 +31,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, nil)
 }
 
-type LoginTemplateData struct {
+type loginTemplateData struct {
 	Message string
 }
 
@@ -39,7 +39,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		s, _ := tmplBox.FindString("login.html")
 		tmpl, _ := template.New("login").Parse(s)
-		tmpl.Execute(w, LoginTemplateData{Message: ""})
+		tmpl.Execute(w, loginTemplateData{Message: ""})
 	} else {
 		if model.VerifyUser(r.FormValue("username"), r.FormValue("password")) {
 			// TODO: authorize
@@ -47,12 +47,12 @@ func login(w http.ResponseWriter, r *http.Request) {
 		} else {
 			s, _ := tmplBox.FindString("login.html")
 			tmpl, _ := template.New("login").Parse(s)
-			tmpl.Execute(w, LoginTemplateData{Message: "Nieprawidłowy login lub hasło!"})
+			tmpl.Execute(w, loginTemplateData{Message: "Nieprawidłowy login lub hasło!"})
 		}
 	}
 }
 
-type RegisterTemplateData struct {
+type registerTemplateData struct {
 	Message string
 }
 
@@ -60,7 +60,7 @@ func register(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		s, _ := tmplBox.FindString("register.html")
 		tmpl, _ := template.New("register").Parse(s)
-		tmpl.Execute(w, RegisterTemplateData{Message: ""})
+		tmpl.Execute(w, registerTemplateData{Message: ""})
 	} else {
 		email := r.FormValue("email")
 		username := r.FormValue("username")
@@ -82,7 +82,7 @@ func register(w http.ResponseWriter, r *http.Request) {
 		if errMsg != "" {
 			s, _ := tmplBox.FindString("register.html")
 			tmpl, _ := template.New("register").Parse(s)
-			tmpl.Execute(w, RegisterTemplateData{Message: errMsg})
+			tmpl.Execute(w, registerTemplateData{Message: errMsg})
 		} else {
 			// perform registration
 			model.RegisterUser(username, email, password)

@@ -1,12 +1,16 @@
 package model
 
-import "log"
-import "time"
-import "encoding/hex"
-import "database/sql"
-import "math/rand"
-import _ "github.com/mattn/go-sqlite3"
-import "crypto/sha256"
+import (
+	"database/sql"
+	"encoding/hex"
+	"log"
+	"math/rand"
+	"time"
+
+	"crypto/sha256"
+
+	_ "github.com/mattn/go-sqlite3"
+)
 
 func openSqlConn() (*sql.DB, error) {
 	// connect to db
