@@ -31,26 +31,41 @@ func index(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, nil)
 }
 
-type LoginForm struct {
-    Username string
-    Password string
+type LoginTemplateData struct {
+    Message string
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		s, _ := tmplBox.FindString("login.html")
 		tmpl, _ := template.New("login").Parse(s)
-		tmpl.Execute(w, nil)
+        tmpl.Execute(w, LoginTemplateData{Message:""})
 	} else {
-        model.VerifyUser(r.FormValue("username"), r.FormValue("password"))
-		http.Redirect(w, r, "landing", http.StatusSeeOther)
+        if model.VerifyUser(r.FormValue("username"), r.FormValue("password")) {
+            // TODO: authorize
+            http.Redirect(w, r, "landing", http.StatusSeeOther)
+        } else {
+            s, _ := tmplBox.FindString("login.html")
+            tmpl, _ := template.New("login").Parse(s)
+            tmpl.Execute(w, LoginTemplateData{Message:"Nieprawidłowy login lub hasło!"})
+        }
 	}
 }
 
+type RegisterTemplateData struct {
+    Message string
+}
+
 func register(w http.ResponseWriter, r *http.Request) {
-	s, _ := tmplBox.FindString("register.html")
-	tmpl, _ := template.New("register").Parse(s)
-	tmpl.Execute(w, nil)
+    if r.Method != http.MethodPost {
+        s, _ := tmplBox.FindString("register.html")
+        tmpl, _ := template.New("register").Parse(s)
+        tmpl.Execute(w, RegisterTemplateData{Message:""})
+    } else {
+        s, _ := tmplBox.FindString("register.html")
+        tmpl, _ := template.New("register").Parse(s)
+        tmpl.Execute(w, RegisterTemplateData{Message:""})
+    }
 }
 
 func viewcards(w http.ResponseWriter, r *http.Request) {

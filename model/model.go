@@ -21,6 +21,10 @@ func hash(password string, salt string) string {
     return hex.EncodeToString(sum[:])
 }
 
+func RegisterUser(username string, email string, password string) {
+
+}
+
 func VerifyUser(username string, password string) bool {
 	// connect to db
 	db, err := openSqlConn()
@@ -121,6 +125,8 @@ func Init() {
 	}
 
 	// put some data
+
+    // user:secret
 	_, err = db.Exec(`
     insert into user(username, passwordhash, salt, email, active, admin, created)
     values ('user', 'f6ba18523c6942ba1e1b54f8256527ab1b8db94496cf6f4a2b6db9695c0fc6f9', 'abc', 'user@example.com', 1, 0, datetime('now'));

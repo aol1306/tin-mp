@@ -15,7 +15,7 @@
     <div class=content>
         <div class="content-item grid-row-1"><h2>Zacznij już dzisiaj</h2></div>
         <div class="content-item grid-row-2">
-                <form class=grid-container action=login-landing.html method=post onsubmit="return validateForm(this)">
+                <form class=grid-container action=register method=post onsubmit="return validateForm(this)">
                 <label for=email style="grid-row: 1; grid-column: 1;line-height: 1.8em;">Email</label>
                 <input class="validate form-required form-email text-input" name=email style="grid-row: 1; grid-column: 2;" type=text oninput="validate(this)">
                 <span class='error-message' style="grid-row: 1; grid-column: 3;"></span>
@@ -33,7 +33,7 @@
                 <span class='error-message' style="grid-row: 4; grid-column: 3;"></span>
 
                 <input class=submit-button type="submit" style="grid-row:5; grid-column: 2;" value=Rejestruj>
-                <span id='error-box' style="grid-row:6; grid-column: 2;"></span>
+                <span id='error-box' style="grid-row:6; grid-column: 2;">{{.Message}}</span>
                 </form>
         </div>
     </div>
