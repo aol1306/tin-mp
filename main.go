@@ -21,13 +21,13 @@ func logging(f http.HandlerFunc) http.HandlerFunc {
 
 func index(w http.ResponseWriter, r *http.Request) {
 	s, err := tmplBox.FindString("index.html")
-    if err != nil {
-        log.Println(err)
-    }
+	if err != nil {
+		log.Println(err)
+	}
 	tmpl, err := template.New("index").Parse(s)
-    if err != nil {
-        log.Println(err)
-    }
+	if err != nil {
+		log.Println(err)
+	}
 	tmpl.Execute(w, nil)
 }
 
