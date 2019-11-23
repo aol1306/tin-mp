@@ -31,13 +31,18 @@ func index(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, nil)
 }
 
+type LoginForm struct {
+    Username string
+    Password string
+}
+
 func login(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		s, _ := tmplBox.FindString("login.html")
 		tmpl, _ := template.New("login").Parse(s)
 		tmpl.Execute(w, nil)
 	} else {
-		// TODO: verify login credentials
+        model.VerifyUser(r.FormValue("username"), r.FormValue("password"))
 		http.Redirect(w, r, "landing", http.StatusSeeOther)
 	}
 }

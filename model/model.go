@@ -1,18 +1,67 @@
 package model
 
 import "log"
+import "encoding/hex"
 import "database/sql"
 import _ "github.com/mattn/go-sqlite3"
+import "crypto/sha256"
+
+func openSqlConn() (*sql.DB, error) {
+	// connect to db
+	db, err := sql.Open("sqlite3", "./database.db")
+	if err != nil {
+		return nil, err
+	} else {
+		return db, nil
+	}
+}
+
+func hash(password string, salt string) string {
+	sum := sha256.Sum256([]byte(password + salt))
+    return hex.EncodeToString(sum[:])
+}
+
+func VerifyUser(username string, password string) bool {
+	// connect to db
+	db, err := openSqlConn()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	// get salt and hash for user
+	var salt string
+	var passwordhash string
+	stmt, err := db.Prepare("select salt,passwordhash from user where username = ?")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt.Close()
+	err = stmt.QueryRow(username).Scan(&salt, &passwordhash)
+	if err != nil {
+        log.Println("No results - user or password invalid")
+        return false
+	}
+
+	// hash password+salt
+	currentHash := hash(password, salt)
+	if currentHash == passwordhash {
+		return true
+	} else {
+		return false
+	}
+}
 
 func Init() {
 	log.Println("Init model")
 
 	// connect to db
-	db, err := sql.Open("sqlite3", "./database.db")
-	defer db.Close()
+	db, err := openSqlConn()
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer db.Close()
+
 	err = db.Ping()
 	if err != nil {
 		log.Println("Cannot ping database")
@@ -26,7 +75,7 @@ func Init() {
     (
         id integer not null primary key,
         username text not null,
-        password text not null,
+        passwordhash text not null,
         salt text not null,
         email text not null,
         active integer not null,
@@ -72,4 +121,11 @@ func Init() {
 	}
 
 	// put some data
+	_, err = db.Exec(`
+    insert into user(username, passwordhash, salt, email, active, admin, created)
+    values ('user', 'f6ba18523c6942ba1e1b54f8256527ab1b8db94496cf6f4a2b6db9695c0fc6f9', 'abc', 'user@example.com', 1, 0, datetime('now'));
+    `)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
