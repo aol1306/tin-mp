@@ -32,40 +32,63 @@ func index(w http.ResponseWriter, r *http.Request) {
 }
 
 type LoginTemplateData struct {
-    Message string
+	Message string
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		s, _ := tmplBox.FindString("login.html")
 		tmpl, _ := template.New("login").Parse(s)
-        tmpl.Execute(w, LoginTemplateData{Message:""})
+		tmpl.Execute(w, LoginTemplateData{Message: ""})
 	} else {
-        if model.VerifyUser(r.FormValue("username"), r.FormValue("password")) {
-            // TODO: authorize
-            http.Redirect(w, r, "landing", http.StatusSeeOther)
-        } else {
-            s, _ := tmplBox.FindString("login.html")
-            tmpl, _ := template.New("login").Parse(s)
-            tmpl.Execute(w, LoginTemplateData{Message:"Nieprawidłowy login lub hasło!"})
-        }
+		if model.VerifyUser(r.FormValue("username"), r.FormValue("password")) {
+			// TODO: authorize
+			http.Redirect(w, r, "landing", http.StatusSeeOther)
+		} else {
+			s, _ := tmplBox.FindString("login.html")
+			tmpl, _ := template.New("login").Parse(s)
+			tmpl.Execute(w, LoginTemplateData{Message: "Nieprawidłowy login lub hasło!"})
+		}
 	}
 }
 
 type RegisterTemplateData struct {
-    Message string
+	Message string
 }
 
 func register(w http.ResponseWriter, r *http.Request) {
-    if r.Method != http.MethodPost {
-        s, _ := tmplBox.FindString("register.html")
-        tmpl, _ := template.New("register").Parse(s)
-        tmpl.Execute(w, RegisterTemplateData{Message:""})
-    } else {
-        s, _ := tmplBox.FindString("register.html")
-        tmpl, _ := template.New("register").Parse(s)
-        tmpl.Execute(w, RegisterTemplateData{Message:""})
-    }
+	if r.Method != http.MethodPost {
+		s, _ := tmplBox.FindString("register.html")
+		tmpl, _ := template.New("register").Parse(s)
+		tmpl.Execute(w, RegisterTemplateData{Message: ""})
+	} else {
+		email := r.FormValue("email")
+		username := r.FormValue("username")
+		password := r.FormValue("password")
+		passwordConfirm := r.FormValue("confirm-password")
+		log.Println(password)
+		log.Println(passwordConfirm)
+		// validate
+		errMsg := ""
+		if email == "" || username == "" || password == "" || passwordConfirm == "" {
+			errMsg = "Nie wszystkie pola zostały wypełnione"
+		}
+		if password != passwordConfirm {
+			errMsg = "Hasła nie są identyczne"
+		}
+		if len(password) < 8 {
+			errMsg = "Hasło jest za krótkie"
+		}
+		if errMsg != "" {
+			s, _ := tmplBox.FindString("register.html")
+			tmpl, _ := template.New("register").Parse(s)
+			tmpl.Execute(w, RegisterTemplateData{Message: errMsg})
+		} else {
+			// perform registration
+			model.RegisterUser(username, email, password)
+			http.Redirect(w, r, "login", http.StatusSeeOther)
+		}
+	}
 }
 
 func viewcards(w http.ResponseWriter, r *http.Request) {
