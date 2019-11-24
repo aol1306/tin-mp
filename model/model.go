@@ -9,17 +9,16 @@ import (
 
 	"crypto/sha256"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/mattn/go-sqlite3" // required for model
 )
 
-func openSqlConn() (*sql.DB, error) {
+func openSQLConn() (*sql.DB, error) {
 	// connect to db
-	db, err := sql.Open("sqlite3", "./database.db")
+	db, err := sql.Open("sqlite3", "database.db")
 	if err != nil {
 		return nil, err
-	} else {
-		return db, nil
 	}
+	return db, nil
 }
 
 func hash(password string, salt string) string {
@@ -45,9 +44,10 @@ func getRandomSalt() string {
 	return stringWithCharset(16, charset)
 }
 
+// RegisterUser adds new user to db
 func RegisterUser(username string, email string, password string) {
 	randomSalt := getRandomSalt()
-	db, err := openSqlConn()
+	db, err := openSQLConn()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -66,9 +66,10 @@ func RegisterUser(username string, email string, password string) {
 	}
 }
 
+// VerifyUser checks if user login/pass is valid
 func VerifyUser(username string, password string) bool {
 	// connect to db
-	db, err := openSqlConn()
+	db, err := openSQLConn()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -92,16 +93,16 @@ func VerifyUser(username string, password string) bool {
 	currentHash := hash(password, salt)
 	if currentHash == passwordhash {
 		return true
-	} else {
-		return false
 	}
+	return false
 }
 
+// Init initializes the db and puts some default values
 func Init() {
 	log.Println("Init model")
 
 	// connect to db
-	db, err := openSqlConn()
+	db, err := openSQLConn()
 	if err != nil {
 		log.Fatal(err)
 	}
