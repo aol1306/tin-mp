@@ -15,7 +15,7 @@
         <table style="grid-row: 2;">
             <tr><th>Front</th><th>Tył</th><th></th></tr><!-- <i class="fas fa-search-plus"></i> <i class="fas fa-edit"></i>  <i class="icon-link fas fa-trash" onclick="rly()"></i>-->
             {{range .Cards}}
-            <tr><td>{{.Front}}</td><td>{{.Back}}</td><td><a class=icon-link href="details?id={{.ID}}"><img class=fas src="static/img/details.png"></a><a class=icon-link href="edit?id={{.ID}}"><img class=fas src="static/img/edit.png"></a><img class=fas src="static/img/trash.png" onclick="rly()"></td></tr>
+            <tr><td>{{.Front}}</td><td>{{.Back}}</td><td><a class=icon-link href="details?id={{.ID}}"><img class=fas src="static/img/details.png"></a><a class=icon-link href="edit?id={{.ID}}"><img class=fas src="static/img/edit.png"></a><img class=fas src="static/img/trash.png" onclick="rly('{{.ID}}')"></td></tr>
             {{end}}
         </table>
         <div style="grid-row: 3;" class="list-nav-container">
@@ -30,8 +30,10 @@
 </body>
 
 <script>
-function rly() {
-    alert("Really remove?")
+function rly(id) {
+    if (confirm("Realy remove?")) {
+        window.location.href = "/delete?id="+id;
+    }
 }
 </script>
 

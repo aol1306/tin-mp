@@ -32,6 +32,7 @@ func main() {
 	http.HandleFunc("/edit", logging(controller.Edit))
 	http.HandleFunc("/details", logging(controller.Details))
 	http.HandleFunc("/add", logging(controller.Add))
+	http.HandleFunc("/delete", logging(controller.Delete))
 
 	// static files
 	fs := http.FileServer(staticBox)

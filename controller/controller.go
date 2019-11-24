@@ -172,3 +172,15 @@ func Add(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "landing", http.StatusSeeOther)
 	}
 }
+
+// Delete /delete
+func Delete(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.FormValue("id"))
+	if err != nil {
+		http.Redirect(w, r, "landing", http.StatusSeeOther)
+		return
+	}
+
+	model.DeleteCard(id)
+	http.Redirect(w, r, "landing", http.StatusSeeOther)
+}

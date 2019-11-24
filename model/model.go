@@ -120,6 +120,27 @@ func AddCard(front string, back string, active int) {
 	}
 }
 
+// DeleteCard removes card from db
+func DeleteCard(id int) {
+	// connect to db
+	db, err := openSQLConn()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	stmt, err := db.Prepare("delete from card where id = ?")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(id)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 // Card represents a card
 type Card struct {
 	ID     int
