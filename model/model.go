@@ -98,6 +98,46 @@ func VerifyUser(username string, password string) bool {
 	return false
 }
 
+// Card represents a card
+type Card struct {
+	Front string
+	Back  string
+}
+
+// GetAllCards returns all cards
+func GetAllCards() []Card {
+	// connect to db
+	db, err := openSQLConn()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	rows, err := db.Query("select front, back from card")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	ret := []Card{}
+
+	for rows.Next() {
+		var front string
+		var back string
+		err := rows.Scan(&front, &back)
+		if err != nil {
+			log.Fatal(err)
+		}
+		ret = append(ret, Card{front, back})
+	}
+	err = rows.Err()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return ret
+}
+
 // Init initializes the db and puts some default values
 func Init() {
 	os.Remove("database.db")

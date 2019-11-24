@@ -86,11 +86,17 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+type cardsData struct {
+	Cards []model.Card
+}
+
 // Viewcards /viewcards
 func Viewcards(w http.ResponseWriter, r *http.Request) {
+	cards := model.GetAllCards()
+
 	s, _ := tmplBox.FindString("view-cards.html")
 	tmpl, _ := template.New("view-cards").Parse(s)
-	tmpl.Execute(w, nil)
+	tmpl.Execute(w, cardsData{Cards: cards})
 }
 
 // TODO: add auth
