@@ -100,6 +100,7 @@ func VerifyUser(username string, password string) bool {
 
 // Card represents a card
 type Card struct {
+	ID    int
 	Front string
 	Back  string
 }
@@ -113,7 +114,7 @@ func GetAllCards() []Card {
 	}
 	defer db.Close()
 
-	rows, err := db.Query("select front, back from card")
+	rows, err := db.Query("select id, front, back from card")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -122,13 +123,14 @@ func GetAllCards() []Card {
 	ret := []Card{}
 
 	for rows.Next() {
+		var id int
 		var front string
 		var back string
-		err := rows.Scan(&front, &back)
+		err := rows.Scan(&id, &front, &back)
 		if err != nil {
 			log.Fatal(err)
 		}
-		ret = append(ret, Card{front, back})
+		ret = append(ret, Card{id, front, back})
 	}
 	err = rows.Err()
 	if err != nil {

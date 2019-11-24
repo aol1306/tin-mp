@@ -103,9 +103,11 @@ func Viewcards(w http.ResponseWriter, r *http.Request) {
 
 // Landing /landing
 func Landing(w http.ResponseWriter, r *http.Request) {
+	cards := model.GetAllCards()
+
 	s, _ := tmplBox.FindString("landing.html")
 	tmpl, _ := template.New("landing").Parse(s)
-	tmpl.Execute(w, nil)
+	tmpl.Execute(w, cardsData{Cards: cards})
 }
 
 // Edit /edit
