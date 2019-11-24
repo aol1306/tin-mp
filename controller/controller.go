@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strconv"
 	"tinmp/model"
 
 	"github.com/gobuffalo/packr/v2"
@@ -38,11 +39,11 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		if model.VerifyUser(r.FormValue("username"), r.FormValue("password")) {
 			// TODO: authorize
 			http.Redirect(w, r, "landing", http.StatusSeeOther)
-		} else {
-			s, _ := tmplBox.FindString("login.html")
-			tmpl, _ := template.New("login").Parse(s)
-			tmpl.Execute(w, loginTemplateData{Message: "Nieprawidłowy login lub hasło!"})
+			return
 		}
+		s, _ := tmplBox.FindString("login.html")
+		tmpl, _ := template.New("login").Parse(s)
+		tmpl.Execute(w, loginTemplateData{Message: "Nieprawidłowy login lub hasło!"})
 	}
 }
 
@@ -117,11 +118,30 @@ func Edit(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, nil)
 }
 
+// CardDetails STORES CARD DETAILS
+type CardDetails struct {
+	Front  string
+	Back   string
+	Active int
+}
+
 // Details /details
 func Details(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.FormValue("id"))
+	if err != nil {
+		http.Redirect(w, r, "landing", http.StatusSeeOther)
+		return
+	}
+	card := model.GetCardByID(id)
+
+	if len(card) < 1 {
+		http.Redirect(w, r, "landing", http.StatusSeeOther)
+		return
+	}
+
 	s, _ := tmplBox.FindString("details.html")
 	tmpl, _ := template.New("details").Parse(s)
-	tmpl.Execute(w, nil)
+	tmpl.Execute(w, CardDetails{Front: card[0].Front, Back: card[0].Back, Active: card[0].Active})
 }
 
 // Add /add

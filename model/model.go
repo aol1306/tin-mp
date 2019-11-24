@@ -122,9 +122,45 @@ func AddCard(front string, back string, active int) {
 
 // Card represents a card
 type Card struct {
-	ID    int
-	Front string
-	Back  string
+	ID     int
+	Front  string
+	Back   string
+	Active int
+}
+
+// GetCardByID gets a card by ID
+func GetCardByID(id int) []Card {
+	// connect to db
+	db, err := openSQLConn()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	rows, err := db.Query("select id,front,back,active from card where id = ?", id)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	ret := []Card{}
+	for rows.Next() {
+		var id int
+		var front string
+		var back string
+		var active int
+		err := rows.Scan(&id, &front, &back, &active)
+		if err != nil {
+			log.Fatal(err)
+		}
+		ret = append(ret, Card{id, front, back, active})
+	}
+	err = rows.Err()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return ret
 }
 
 // GetAllCards returns all cards
@@ -136,7 +172,7 @@ func GetAllCards() []Card {
 	}
 	defer db.Close()
 
-	rows, err := db.Query("select id, front, back from card")
+	rows, err := db.Query("select id, front, back, active from card")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -148,11 +184,12 @@ func GetAllCards() []Card {
 		var id int
 		var front string
 		var back string
-		err := rows.Scan(&id, &front, &back)
+		var active int
+		err := rows.Scan(&id, &front, &back, &active)
 		if err != nil {
 			log.Fatal(err)
 		}
-		ret = append(ret, Card{id, front, back})
+		ret = append(ret, Card{id, front, back, active})
 	}
 	err = rows.Err()
 	if err != nil {
