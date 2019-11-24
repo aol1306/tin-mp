@@ -98,6 +98,28 @@ func VerifyUser(username string, password string) bool {
 	return false
 }
 
+// AddCard adds new card to db
+func AddCard(front string, back string, active int) {
+	// front back created modified
+	// connect to db
+	db, err := openSQLConn()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	stmt, err := db.Prepare("insert into card(front, back, active, created, modified) values(?, ?, ?, datetime('now'), datetime('now'));")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(front, back, active)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 // Card represents a card
 type Card struct {
 	ID    int
@@ -184,7 +206,7 @@ func Init() {
         id integer not null primary key,
         front text,
         back text,
-        active integer,
+        active integer default 1,
         created text,
         modified text
     );

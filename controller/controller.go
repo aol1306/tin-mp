@@ -126,7 +126,29 @@ func Details(w http.ResponseWriter, r *http.Request) {
 
 // Add /add
 func Add(w http.ResponseWriter, r *http.Request) {
-	s, _ := tmplBox.FindString("add.html")
-	tmpl, _ := template.New("add").Parse(s)
-	tmpl.Execute(w, nil)
+	if r.Method != http.MethodPost {
+		s, _ := tmplBox.FindString("add.html")
+		tmpl, _ := template.New("add").Parse(s)
+		tmpl.Execute(w, nil)
+	} else {
+		// add new card to DB, redirect to landing
+		front := r.FormValue("front")
+		back := r.FormValue("back")
+		active := r.FormValue("active")
+
+		// validationnnn
+		if front == "" || back == "" {
+			s, _ := tmplBox.FindString("add.html")
+			tmpl, _ := template.New("add").Parse(s)
+			tmpl.Execute(w, nil)
+		}
+
+		if active == "on" {
+			model.AddCard(front, back, 1)
+		} else {
+			model.AddCard(front, back, 0)
+		}
+
+		http.Redirect(w, r, "landing", http.StatusSeeOther)
+	}
 }
