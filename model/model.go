@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"log"
 	"math/rand"
+	"os"
 	"time"
 
 	"crypto/sha256"
@@ -99,6 +100,8 @@ func VerifyUser(username string, password string) bool {
 
 // Init initializes the db and puts some default values
 func Init() {
+	os.Remove("database.db")
+
 	log.Println("Init model")
 
 	// connect to db
@@ -154,10 +157,10 @@ func Init() {
         id integer not null primary key,
         id_user integer not null,
         id_card integer not null,
-        srs_score integer,
-        last_seen text,
-        count_wrong integer,
-        count_correct integer,
+        srs_score integer default 0,
+        last_seen text default '',
+        count_wrong integer default 0,
+        count_correct integer default 0,
         foreign key (id_user) references user (id)
         foreign key (id_card) references card (id)
     );
@@ -173,6 +176,41 @@ func Init() {
     insert into user(username, passwordhash, salt, email, active, admin, created)
     values ('user', 'f6ba18523c6942ba1e1b54f8256527ab1b8db94496cf6f4a2b6db9695c0fc6f9', 'abc', 'user@example.com', 1, 0, datetime('now'));
     `)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// some cards
+	_, err = db.Exec(`
+	insert into card(front, back, active, created, modified) values ('人', 'człowiek', 1, datetime('now'), datetime('now'));
+	insert into card(front, back, active, created, modified) values ('手', 'ręka', 1, datetime('now'), datetime('now'));
+	insert into card(front, back, active, created, modified) values ('目', 'oko', 1, datetime('now'), datetime('now'));
+	insert into card(front, back, active, created, modified) values ('天気', 'pogoda', 1, datetime('now'), datetime('now'));
+	insert into card(front, back, active, created, modified) values ('年', 'rok', 1, datetime('now'), datetime('now'));
+	insert into card(front, back, active, created, modified) values ('電車', 'pociąg', 1, datetime('now'), datetime('now'));
+	insert into card(front, back, active, created, modified) values ('森', 'las', 1, datetime('now'), datetime('now'));
+	insert into card(front, back, active, created, modified) values ('電池', 'bateria', 1, datetime('now'), datetime('now'));
+	insert into card(front, back, active, created, modified) values ('結婚', 'ślub', 1, datetime('now'), datetime('now'));
+	insert into card(front, back, active, created, modified) values ('車', 'samochód', 1, datetime('now'), datetime('now'));
+	insert into card(front, back, active, created, modified) values ('勇者', 'bohater', 1, datetime('now'), datetime('now'));
+	insert into card(front, back, active, created, modified) values ('感謝', 'wdzięczność', 1, datetime('now'), datetime('now'));
+	insert into card(front, back, active, created, modified) values ('お金', 'pieniądze', 1, datetime('now'), datetime('now'));
+	insert into card(front, back, active, created, modified) values ('気温', 'temperatura', 1, datetime('now'), datetime('now'));
+	insert into card(front, back, active, created, modified) values ('着物', 'kimono', 1, datetime('now'), datetime('now'));
+	insert into card(front, back, active, created, modified) values ('土曜日', 'Sobota', 1, datetime('now'), datetime('now'));
+	`)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// assign some cards to user 1
+	_, err = db.Exec(`
+	insert into user_card(id_user, id_card) values (1,1);
+	insert into user_card(id_user, id_card) values (1,3);
+	insert into user_card(id_user, id_card) values (1,4);
+	insert into user_card(id_user, id_card) values (1,5);
+	insert into user_card(id_user, id_card) values (1,8);
+	`)
 	if err != nil {
 		log.Fatal(err)
 	}

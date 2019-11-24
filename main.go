@@ -19,6 +19,7 @@ func logging(f http.HandlerFunc) http.HandlerFunc {
 }
 
 func main() {
+	// log.SetFlags(log.LstdFlags | log.Lshortfile)
 	log.Println("Start")
 
 	model.Init()
