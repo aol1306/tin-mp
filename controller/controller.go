@@ -111,6 +111,10 @@ func Landing(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, cardsData{Cards: cards})
 }
 
+type editData struct {
+	Users []model.AssignedUser
+}
+
 // Edit /edit
 func Edit(w http.ResponseWriter, r *http.Request) {
 	id := r.FormValue("id")
@@ -124,7 +128,7 @@ func Edit(w http.ResponseWriter, r *http.Request) {
 
 	s, _ := tmplBox.FindString("edit.html")
 	tmpl, _ := template.New("edit").Parse(s)
-	tmpl.Execute(w, users)
+	tmpl.Execute(w, editData{Users: users})
 }
 
 // CardDetails STORES CARD DETAILS

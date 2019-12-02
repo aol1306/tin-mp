@@ -30,14 +30,9 @@
                 <label for=active style="grid-row: 4; grid-column: 1;line-height: 1.8em;">Przypisani</label>
                 <div style="grid-row: 4; grid-column: 2;">
                     <select multiple style="width: -webkit-fill-available;">
-                        <option value="1">Andrzej</option>
-                        <option value="2">Wojciech</option>
-                        <option value="3">Paweł</option>
-                        <option value="4">Przemek</option>
-                        <option value="5">Błażej</option>
-                        <option value="6">Damian</option>
-                        <option value="7">Karolina</option>
-                        <option value="8">Sylwia</option>
+                        {{range .Users}}
+                        <option value={{.ID}}>{{.Username}}</option>
+                        {{end}}
                     </select>
                 </div>
 

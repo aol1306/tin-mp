@@ -47,8 +47,8 @@ func getRandomSalt() string {
 
 // AssignedUser represents a user assigned to card
 type AssignedUser struct {
-	id       int
-	username string
+	ID       int
+	Username string
 }
 
 // GetAssignedUsers gets users assigned to a card
