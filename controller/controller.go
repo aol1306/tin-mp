@@ -113,9 +113,18 @@ func Landing(w http.ResponseWriter, r *http.Request) {
 
 // Edit /edit
 func Edit(w http.ResponseWriter, r *http.Request) {
+	id := r.FormValue("id")
+	val, err := strconv.Atoi(id)
+	if err != nil {
+		log.Println("Bad value in ID")
+		http.Redirect(w, r, "landing", http.StatusSeeOther)
+		return
+	}
+	users := model.GetAssignedUsers(val)
+
 	s, _ := tmplBox.FindString("edit.html")
 	tmpl, _ := template.New("edit").Parse(s)
-	tmpl.Execute(w, nil)
+	tmpl.Execute(w, users)
 }
 
 // CardDetails STORES CARD DETAILS
@@ -129,6 +138,7 @@ type CardDetails struct {
 func Details(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.FormValue("id"))
 	if err != nil {
+		log.Println("Bad value in ID")
 		http.Redirect(w, r, "landing", http.StatusSeeOther)
 		return
 	}

@@ -45,6 +45,45 @@ func getRandomSalt() string {
 	return stringWithCharset(16, charset)
 }
 
+// AssingedUser represents a user assigned to card
+type AssignedUser struct {
+	id       int
+	username string
+}
+
+// GetAssignedUsers gets users assigned to a card
+func GetAssignedUsers(cardID int) []AssignedUser {
+	db, err := openSQLConn()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	rows, err := db.Query("select user.id, user.username from user, card, user_card where user.id = user_card.id_user and card.id = user_card.id_card and user_card.id_card = ?;", cardID)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	ret := []AssignedUser{}
+
+	for rows.Next() {
+		var id int
+		var username string
+		err := rows.Scan(&id, &username)
+		if err != nil {
+			log.Fatal(err)
+		}
+		ret = append(ret, AssignedUser{id, username})
+	}
+	err = rows.Err()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return ret
+}
+
 // RegisterUser adds new user to db
 func RegisterUser(username string, email string, password string) {
 	randomSalt := getRandomSalt()
@@ -296,7 +335,11 @@ func Init() {
 	// user:secret
 	_, err = db.Exec(`
     insert into user(username, passwordhash, salt, email, active, admin, created)
-    values ('user', 'f6ba18523c6942ba1e1b54f8256527ab1b8db94496cf6f4a2b6db9695c0fc6f9', 'abc', 'user@example.com', 1, 0, datetime('now'));
+	values ('user', 'f6ba18523c6942ba1e1b54f8256527ab1b8db94496cf6f4a2b6db9695c0fc6f9', 'abc', 'user@example.com', 1, 0, datetime('now'));
+	insert into user(username, passwordhash, salt, email, active, admin, created)
+	values ('user1', 'f6ba18523c6942ba1e1b54f8256527ab1b8db94496cf6f4a2b6db9695c0fc6f9', 'abc', 'user@example.com', 1, 0, datetime('now'));
+	insert into user(username, passwordhash, salt, email, active, admin, created)
+	values ('user2', 'f6ba18523c6942ba1e1b54f8256527ab1b8db94496cf6f4a2b6db9695c0fc6f9', 'abc', 'user@example.com', 1, 0, datetime('now'));
     `)
 	if err != nil {
 		log.Fatal(err)
