@@ -45,7 +45,7 @@ func getRandomSalt() string {
 	return stringWithCharset(16, charset)
 }
 
-// AssingedUser represents a user assigned to card
+// AssignedUser represents a user assigned to card
 type AssignedUser struct {
 	id       int
 	username string
