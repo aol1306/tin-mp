@@ -112,7 +112,7 @@ func Landing(w http.ResponseWriter, r *http.Request) {
 }
 
 type editData struct {
-	Users []model.AssignedUser
+	Users []model.User
 }
 
 // Edit /edit

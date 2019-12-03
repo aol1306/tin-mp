@@ -45,14 +45,14 @@ func getRandomSalt() string {
 	return stringWithCharset(16, charset)
 }
 
-// AssignedUser represents a user assigned to card
-type AssignedUser struct {
+// User represents a user assigned to card
+type User struct {
 	ID       int
 	Username string
 }
 
 // GetAssignedUsers gets users assigned to a card
-func GetAssignedUsers(cardID int) []AssignedUser {
+func GetAssignedUsers(cardID int) []User {
 	db, err := openSQLConn()
 	if err != nil {
 		log.Fatal(err)
@@ -65,7 +65,7 @@ func GetAssignedUsers(cardID int) []AssignedUser {
 	}
 	defer rows.Close()
 
-	ret := []AssignedUser{}
+	ret := []User{}
 
 	for rows.Next() {
 		var id int
@@ -74,7 +74,7 @@ func GetAssignedUsers(cardID int) []AssignedUser {
 		if err != nil {
 			log.Fatal(err)
 		}
-		ret = append(ret, AssignedUser{id, username})
+		ret = append(ret, User{id, username})
 	}
 	err = rows.Err()
 	if err != nil {
