@@ -112,7 +112,8 @@ func Landing(w http.ResponseWriter, r *http.Request) {
 }
 
 type editData struct {
-	Users []model.User
+	AssignedUsers   []model.User
+	UnassignedUsers []model.User
 }
 
 // Edit /edit
@@ -124,11 +125,13 @@ func Edit(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "landing", http.StatusSeeOther)
 		return
 	}
-	users := model.GetAssignedUsers(val)
+
+	assignedUsers := model.GetAssignedUsers(val)
+	unassignedUsers := model.GetUnassignedUsers(val)
 
 	s, _ := tmplBox.FindString("edit.html")
 	tmpl, _ := template.New("edit").Parse(s)
-	tmpl.Execute(w, editData{Users: users})
+	tmpl.Execute(w, editData{AssignedUsers: assignedUsers, UnassignedUsers: unassignedUsers})
 }
 
 // CardDetails STORES CARD DETAILS

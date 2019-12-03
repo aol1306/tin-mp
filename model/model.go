@@ -51,6 +51,39 @@ type User struct {
 	Username string
 }
 
+// GetUnassignedUsers gets all users who dont have the card assigned
+func GetUnassignedUsers(cardID int) []User {
+	db, err := openSQLConn()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	rows, err := db.Query("select id, username from user where id not like (select user.id from user, user_card where user.id = user_card.id_user and user_card.id_card = ?) or not exists (select user.id from user, user_card where user.id = user_card.id_user and user_card.id_card = ?);", cardID, cardID)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	ret := []User{}
+
+	for rows.Next() {
+		var id int
+		var username string
+		err := rows.Scan(&id, &username)
+		if err != nil {
+			log.Fatal(err)
+		}
+		ret = append(ret, User{id, username})
+	}
+	err = rows.Err()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return ret
+}
+
 // GetAssignedUsers gets users assigned to a card
 func GetAssignedUsers(cardID int) []User {
 	db, err := openSQLConn()
@@ -59,7 +92,7 @@ func GetAssignedUsers(cardID int) []User {
 	}
 	defer db.Close()
 
-	rows, err := db.Query("select user.id, user.username from user, card, user_card where user.id = user_card.id_user and card.id = user_card.id_card and user_card.id_card = ?;", cardID)
+	rows, err := db.Query("select user.id, user.username from user, user_card where user.id = user_card.id_user and user_card.id_card = ?;", cardID)
 	if err != nil {
 		log.Fatal(err)
 	}

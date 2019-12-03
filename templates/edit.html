@@ -30,7 +30,10 @@
                 <label for=active style="grid-row: 4; grid-column: 1;line-height: 1.8em;">Przypisani</label>
                 <div style="grid-row: 4; grid-column: 2;">
                     <select multiple style="width: -webkit-fill-available;">
-                        {{range .Users}}
+                        {{range .AssignedUsers}}
+                        <option selected="selected" value={{.ID}}>{{.Username}}</option>
+                        {{end}}
+                        {{range .UnassignedUsers}}
                         <option value={{.ID}}>{{.Username}}</option>
                         {{end}}
                     </select>
