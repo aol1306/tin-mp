@@ -59,7 +59,7 @@ func GetUnassignedUsers(cardID int) []User {
 	}
 	defer db.Close()
 
-	rows, err := db.Query("select id, username from user where id not like (select user.id from user, user_card where user.id = user_card.id_user and user_card.id_card = ?) or not exists (select user.id from user, user_card where user.id = user_card.id_user and user_card.id_card = ?);", cardID, cardID)
+	rows, err := db.Query("select id, username from user except select user.id, user.username from user, user_card where user_card.id_card=? and user.id = user_card.id_user;", cardID)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -82,6 +82,39 @@ func GetUnassignedUsers(cardID int) []User {
 	}
 
 	return ret
+}
+
+// UpdateAssignedUsers adds new user assignments in user_card table
+func UpdateAssignedUsers(cardID int, users []int) {
+	db, err := openSQLConn()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	// remove old assignments
+	stmt1, err := db.Prepare("delete from user_card where id_card = ?;")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt1.Close()
+	_, err = stmt1.Exec(cardID)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// add new shiny assignments
+	for _, uid := range users {
+		stmt, err := db.Prepare("insert into user_card(id_user, id_card) values (?, ?);")
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer stmt.Close()
+		_, err = stmt.Exec(uid, cardID)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 }
 
 // GetAssignedUsers gets users assigned to a card
@@ -187,6 +220,26 @@ func AddCard(front string, back string, active int) {
 	defer stmt.Close()
 
 	_, err = stmt.Exec(front, back, active)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+// UpdateCard updates a card
+func UpdateCard(front string, back string, active int, cardID int) {
+	db, err := openSQLConn()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	stmt, err := db.Prepare("update card set front = ?, back = ?, active = ?, modified = datetime('now') where id = ?;")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(front, back, active, cardID)
 	if err != nil {
 		log.Fatal(err)
 	}

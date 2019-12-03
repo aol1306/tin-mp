@@ -112,6 +112,7 @@ func Landing(w http.ResponseWriter, r *http.Request) {
 }
 
 type editData struct {
+	Card            model.Card
 	AssignedUsers   []model.User
 	UnassignedUsers []model.User
 }
@@ -125,13 +126,39 @@ func Edit(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "landing", http.StatusSeeOther)
 		return
 	}
+	if r.Method != http.MethodPost {
+		assignedUsers := model.GetAssignedUsers(val)
+		unassignedUsers := model.GetUnassignedUsers(val)
+		card := model.GetCardByID(val)[0]
 
-	assignedUsers := model.GetAssignedUsers(val)
-	unassignedUsers := model.GetUnassignedUsers(val)
+		s, _ := tmplBox.FindString("edit.html")
+		tmpl, _ := template.New("edit").Parse(s)
+		tmpl.Execute(w, editData{Card: card, AssignedUsers: assignedUsers, UnassignedUsers: unassignedUsers})
+	} else {
+		r.ParseForm()
+		front := r.FormValue("front")
+		back := r.FormValue("back")
+		active := r.FormValue("active")
+		users := r.Form["users"]
 
-	s, _ := tmplBox.FindString("edit.html")
-	tmpl, _ := template.New("edit").Parse(s)
-	tmpl.Execute(w, editData{AssignedUsers: assignedUsers, UnassignedUsers: unassignedUsers})
+		var activeInt int
+		if active == "on" {
+			activeInt = 1
+		} else {
+			activeInt = 0
+		}
+
+		var assignedUsers []int
+		for _, userID := range users {
+			val, _ := strconv.Atoi(userID)
+			assignedUsers = append(assignedUsers, val)
+		}
+
+		model.UpdateCard(front, back, activeInt, val)
+		model.UpdateAssignedUsers(val, assignedUsers)
+
+		http.Redirect(w, r, "landing", http.StatusSeeOther)
+	}
 }
 
 // CardDetails STORES CARD DETAILS

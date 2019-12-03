@@ -14,22 +14,22 @@
     <div class=content>
         <div class="content-item grid-row-1"><h2>Edytuj</h2></div>
         <div class="content-item grid-row-2">
-            <form class=grid-container action=login-landing.html method=post onsubmit="return validateForm(this)">
+            <form class=grid-container action="edit?id={{.Card.ID}}" method=post onsubmit="return validateForm(this)">
 
                 <label for=front style="grid-row: 1; grid-column: 1;line-height: 1.8em;">Front</label>
-                <input class="validate form-required text-input" name=front style="grid-row: 1; grid-column: 2;" type=text value=気温 oninput="validate(this)">
+                <input class="validate form-required text-input" name=front style="grid-row: 1; grid-column: 2;" type=text value={{.Card.Front}} oninput="validate(this)">
                 <span class='error-message' style="grid-row: 1; grid-column: 3;"></span>
 
                 <label for=back style="grid-row: 2; grid-column: 1;line-height: 1.8em;">Tył</label>
-                <input class="validate form-required text-input" name=back style="grid-row: 2; grid-column: 2;" type=text value=temperatura oninput="validate(this)">
+                <input class="validate form-required text-input" name=back style="grid-row: 2; grid-column: 2;" type=text value={{.Card.Back}} oninput="validate(this)">
                 <span class='error-message' style="grid-row: 2; grid-column: 3;"></span>
 
                 <label for=active style="grid-row: 3; grid-column: 1;line-height: 1.8em;">Aktywna</label>
-                <input class=text-input name=back style="grid-row: 3; grid-column: 2;" type=checkbox>
+                <input class=text-input name=active style="grid-row: 3; grid-column: 2;" type=checkbox {{if .Card.Active }}checked{{end}}>
 
                 <label for=active style="grid-row: 4; grid-column: 1;line-height: 1.8em;">Przypisani</label>
                 <div style="grid-row: 4; grid-column: 2;">
-                    <select multiple style="width: -webkit-fill-available;">
+                    <select name=users multiple style="width: -webkit-fill-available;">
                         {{range .AssignedUsers}}
                         <option selected="selected" value={{.ID}}>{{.Username}}</option>
                         {{end}}
