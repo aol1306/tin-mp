@@ -141,6 +141,11 @@ func Edit(w http.ResponseWriter, r *http.Request) {
 		active := r.FormValue("active")
 		users := r.Form["users"]
 
+		// validation
+		if front == "" || back == "" {
+			http.Redirect(w, r, "landing", http.StatusSeeOther)
+		}
+
 		var activeInt int
 		if active == "on" {
 			activeInt = 1
